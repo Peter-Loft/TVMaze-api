@@ -3,6 +3,7 @@
 const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
+const ROOT_TVMAZE_URL = "https://api.tvmaze.com/";
 
 
 /** Given a search term, search for tv shows that match that query.
@@ -12,8 +13,11 @@ const $searchForm = $("#searchForm");
  *    (if no image URL given by API, put in a default image URL)
  */
 
-async function getShowsByTerm( /* term */) {
+async function getShowsByTerm(term) {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
+  let shows = [];
+  const response = await axios.get(`${ROOT_TVMAZE_URL}search/shows`, {params : { term }});
+
 
   return [
     {
