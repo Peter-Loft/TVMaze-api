@@ -12,6 +12,8 @@ const ROOT_TVMAZE_URL = "https://api.tvmaze.com/";
  *    (if no image URL given by API, put in a default image URL)
  */
 
+/** accepts a user search term input, makes an api request to retrieve show data, and returns a result array of show objects with useful info
+ */
 async function getShowsByTerm(term) {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
   let showsList = [];
@@ -22,18 +24,16 @@ async function getShowsByTerm(term) {
 
   const showsArray = response.data;
 
-  // console.log(showsArray);
-
   showsArray.forEach((show) => {
     const { name, id, summary } = show.show;
 
-    const showObj = { 
-      id, 
-      name, 
-      summary, 
-      image: (show.show.image === null) 
-      ? "https://tinyurl.com/tv-missing" 
-      : show.show.image.original 
+    const showObj = {
+      id,
+      name,
+      summary,
+      image: show.show.image
+        ? show.show.image.original
+        : "https://tinyurl.com/tv-missing",
     };
 
     showsList.push(showObj);
@@ -44,6 +44,7 @@ async function getShowsByTerm(term) {
 
 /** Given list of shows, create markup for each and to DOM */
 
+/** accepts the shows input, creates markup for each, and appends to DOM  */
 function populateShows(shows) {
   $showsList.empty();
 
@@ -92,7 +93,30 @@ $searchForm.on("submit", async function (evt) {
  *      { id, name, season, number }
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {
+  const response = await axios.get(
+    `${ROOT_TVMAZE_URL}shows/${id}/episodes
+  `
+  );
+
+  const episodes = response.data;
+  const episodesList = [];
+
+  episodes.forEach((episode) => {
+    const { name, id, season, number } = episode;
+
+    const episodeObj = {
+      name,
+      id,
+      season,
+      number,
+    };
+
+    episodesList.push(episodeObj);
+  });
+
+  return episodesList;
+}
 
 /** Write a clear docstring for this function... */
 
