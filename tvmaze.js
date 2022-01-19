@@ -27,7 +27,14 @@ async function getShowsByTerm(term) {
   showsArray.forEach((show) => {
     const { name, id, summary } = show.show;
 
-    const showObj = { id, name, summary, image: show.show.image.original };
+    const showObj = { 
+      id, 
+      name, 
+      summary, 
+      image: (show.show.image === null) 
+      ? "https://tinyurl.com/tv-missing" 
+      : show.show.image.original 
+    };
 
     showsList.push(showObj);
   });
@@ -45,8 +52,8 @@ function populateShows(shows) {
       `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
            <img 
-              src="http://static.tvmaze.com/uploads/images/medium_portrait/160/401704.jpg" 
-              alt="Bletchly Circle San Francisco" 
+              src=${show.image} 
+              alt=${show.name} 
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
