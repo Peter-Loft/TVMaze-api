@@ -67,7 +67,6 @@ function populateShows(shows) {
        </div>
       `
     );
-
     $showsList.append($show);
   }
 }
@@ -87,6 +86,12 @@ async function searchForShowAndDisplay() {
 $searchForm.on("submit", async function (evt) {
   evt.preventDefault();
   await searchForShowAndDisplay();
+});
+
+$("#showsList").on("click", ".Show-getEpisodes", function (evt) {
+
+  getEpisodesAndDisplay(evt.target);
+
 });
 
 /** Given a show ID, get from API and return (promise) array of episodes:
@@ -118,6 +123,29 @@ async function getEpisodesOfShow(id) {
   return episodesList;
 }
 
-/** Write a clear docstring for this function... */
+/** Accepts array of objects, extracts info 
+ * and appends to DOM with new li.
+ * */
 
-// function populateEpisodes(episodes) { }
+function populateEpisodes(episodes) { 
+
+  for (let episode of episodes) {
+    
+    const $episode = $(
+      `<li data-episode-id="${episode.id}">
+      ${episode.name} (season ${episode.season}, number ${episode.number})
+      </li>`
+    );
+    $episodesArea.append($episode);
+  }
+  $episodesArea.show()
+}
+
+async function getEpisodesAndDisplay(evt) {
+  // code to grab the id from the jquery ancestor
+  let id = $(evt).parent().parent().parent().data("show-id");
+  console.log(id);
+  let episodes = await getEpisodesOfShow(id);
+
+  populateEpisodes(episodes);
+}
